@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Your Account - ChatUp</title>
+    <style>
+      :root {
+        --primary: #7c3aed;
+        --primary-light: #8b5cf6;
+        --primary-dark: #6d28d9;
+        --secondary: #06d6a0;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --gray: #64748b;
+        --gray-light: #e2e8f0;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, sans-serif;
+        background: linear-gradient(135deg, #f0f4ff 0%, #e6f7ff 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        line-height: 1.5;
+        color: var(--dark);
+      }
+
+      .container {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        max-width: 480px;
+        width: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15),
+          0 10px 10px -5px rgba(0, 0, 0, 0.06);
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-light) 100%
+        );
+        color: white;
+        padding: 40px 30px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0) 70%
+        );
+        transform: rotate(30deg);
+      }
+
+      .logo {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        position: relative;
+        display: inline-block;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .app-name {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .tagline {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        font-weight: 400;
+      }
+
+      .content {
+        padding: 40px 35px;
+      }
+
+      .greeting {
+        font-size: 1.5rem;
+        color: var(--dark);
+        margin-bottom: 15px;
+        text-align: center;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+      }
+
+      .message {
+        color: var(--gray);
+        line-height: 1.6;
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      .otp-container {
+        text-align: center;
+        margin: 35px 0;
+      }
+
+      .otp-label {
+        font-size: 1rem;
+        color: var(--gray);
+        margin-bottom: 15px;
+        font-weight: 500;
+      }
+
+      .otp-code {
+        font-size: 3.25rem;
+        font-weight: 800;
+        color: var(--primary);
+        letter-spacing: 15px;
+        background: var(--light);
+        padding: 25px 20px;
+        border-radius: 16px;
+        border: 1px solid var(--gray-light);
+        margin: 20px 0;
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .otp-code::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+      }
+
+      .timer {
+        font-size: 0.95rem;
+        color: var(--danger);
+        margin: 20px 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .warning {
+        background: #fffbeb;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 25px 0;
+        text-align: center;
+        position: relative;
+      }
+
+      .warning::before {
+        content: "⚠️";
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .warning-text {
+        color: #92400e;
+        font-weight: 500;
+        margin-left: 30px;
+      }
+
+      .warning strong {
+        color: #92400e;
+      }
+
+      .steps {
+        background: var(--light);
+        border-radius: 16px;
+        padding: 25px;
+        margin: 25px 0;
+        border: 1px solid var(--gray-light);
+      }
+
+      .step {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+      }
+
+      .step:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      .step-number {
+        background: var(--primary);
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-right: 15px;
+        flex-shrink: 0;
+        box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.3);
+      }
+
+      .step-text {
+        color: var(--gray);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        padding-top: 3px;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 25px;
+        background: var(--light);
+        color: var(--gray);
+        font-size: 0.85rem;
+        border-top: 1px solid var(--gray-light);
+      }
+
+      .support {
+        margin-top: 12px;
+        color: var(--primary);
+        font-weight: 500;
+      }
+
+      @media (max-width: 520px) {
+        .container {
+          max-width: 100%;
+          border-radius: 20px;
+        }
+
+        .content {
+          padding: 30px 25px;
+        }
+
+        .header {
+          padding: 30px 25px 25px;
+        }
+
+        .otp-code {
+          font-size: 2.5rem;
+          letter-spacing: 10px;
+          padding: 20px 15px;
+        }
+
+        .greeting {
+          font-size: 1.35rem;
+        }
+
+        .warning::before {
+          position: relative;
+          left: 0;
+          top: 0;
+          transform: none;
+          margin-bottom: 8px;
+          display: block;
+        }
+
+        .warning-text {
+          margin-left: 0;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .content {
+          padding: 25px 20px;
+        }
+
+        .header {
+          padding: 25px 20px 20px;
+        }
+
+        .otp-code {
+          font-size: 2rem;
+          letter-spacing: 8px;
+          padding: 18px 12px;
+        }
+
+        .steps {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo">💬</div>
+        <div class="app-name">ChatUp</div>
+        <div class="tagline">Connect. Chat. Share.</div>
+      </div>
+
+      <div class="content">
+        <h1 class="greeting">Hello {{username}}</h1>
+        <p class="message">
+          You're one step away from accessing your ChatUp account. Use the
+          verification code given below.
+        </p>
+
+        <div class="otp-container">
+          <div class="otp-label">Your verification code:</div>
+          <div class="otp-code" id="otpCode">{{code}}</div>
+          <div class="timer">
+            <span>⏰</span>
+            <span
+              >This code expires in
+              <strong>{{expiryTime}} minutes</strong></span
+            >
+          </div>
+        </div>
+
+        <div class="warning">
+          <div class="warning-text">
+            <strong>Security Alert:</strong> Never share this code with anyone.
+            ChatUp will never ask for your verification code.
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-text">Open ChatUp on your device</div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-text">
+              Enter the 6-digit code above when prompted
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-text">
+              Start connecting with friends and family
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div>If you didn't request this code, please ignore this email.</div>
+        <div class="support">Need help? Contact {{supportEmail}}</div>
+      </div>
+    </div>
+  </body>
+</html>
