@@ -14,3 +14,9 @@ export const USER_EMAIL_TYPES = [
   "TRANSACTIONAL",
   "NOTIFICATION",
 ];
+export const USER_SENSITIVE_FIELDS = [
+  '__v',
+  "userDeviceToken",
+  "userSocialToken",
+  "uniqueProvideId",
+];

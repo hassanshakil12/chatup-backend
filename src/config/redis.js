@@ -3,7 +3,8 @@ import redis from "ioredis";
 const redisClient = new redis({
   host: process.env.REDIS_HOST || "localhost",
   port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
+  password:
+    process.env.NODE_ENV !== "development" ? process.env.REDIS_PASSWORD : null,
   retryStrategy(times) {
     return Math.min(times * 50, 2000);
   },

@@ -11,7 +11,7 @@ import { USER_GENDERS, USER_EMAIL_TYPES } from "../../enums/userEnums.js";
 
 export const loginUser = async (req, res) => {
   try {
-    const email = req.body.email.tolowerCase();
+    const email = req.body.email.toLowerCase();
 
     if (!email || !email.trim()) {
       return apiResponse({
@@ -430,7 +430,22 @@ export const verifyOTP = async (req, res) => {
     let user;
     let successMsg;
     if (result.type === "SIGNUP") {
-      user = new User(result.data);
+      user = await User.findOne({ email: identifier, isVerified: true }).lean();
+      if (user) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: "User already registered",
+        });
+      }
+
+      user = new User({
+        ...result.data,
+        isVerified: true,
+        isActive: true,
+        lastLogin: new Date(),
+      });
       await user.save();
       if (!user) {
         return apiResponse({
@@ -442,7 +457,11 @@ export const verifyOTP = async (req, res) => {
       }
       successMsg = "User registered and OTP verified successfully";
     } else if (result.type === "SIGNIN") {
-      user = await User.findOne({ email: identifier });
+      user = await User.findOneAndUpdate(
+        { email: identifier },
+        { isActive: true, lastLogin: new Date() },
+        { new: true }
+      );
       if (!user) {
         return apiResponse({
           res,
@@ -454,10 +473,7 @@ export const verifyOTP = async (req, res) => {
       successMsg = "OTP verified successfully";
     }
 
-    const authToken = generateAuthToken({
-      userId: user._id,
-      role: user.role,
-    });
+    const authToken = generateAuthToken(user._id, user.role);
     if (!authToken) {
       return apiResponse({
         res,
@@ -488,6 +504,50 @@ export const verifyOTP = async (req, res) => {
 
 export const socialLogin = async (req, res) => {
   try {
+  } catch (error) {
+    return apiResponse({
+      res,
+      status: 500,
+      isConsole: true,
+      code: "SERVER_ERROR",
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user || user.role !== "USER") {
+      return apiResponse({
+        res,
+        status: 403,
+        success: false,
+        message: "User unauthorized to access",
+      });
+    }
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email: user.email },
+      { isActive: false },
+      { new: true }
+    );
+    if (!updatedUser) {
+      return apiResponse({
+        res,
+        status: 400,
+        success: false,
+        message: "Failed to logout user",
+      });
+    }
+
+    return apiResponse({
+      res,
+      status: 200,
+      success: true,
+      message: "User logout successfully",
+    });
   } catch (error) {
     return apiResponse({
       res,

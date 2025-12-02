@@ -83,7 +83,7 @@ const userSchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
-      default: true,
+      default: false,
       index: true,
     },
     isBlocked: {
@@ -107,8 +107,8 @@ const userSchema = new mongoose.Schema(
     uniqueProvideId: {
       type: String,
       unique: true,
-      sparse: true
-    }
+      sparse: true,
+    },
   },
   { timestamps: true }
 );
