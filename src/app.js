@@ -67,7 +67,7 @@ app.get("/health", async (req, res) => {
     apiResponse({
       res,
       status: 500,
-      console: true,
+      isConsole: true,
       code: "SERVER_ERROR",
       success: false,
       message: error.message,
@@ -96,7 +96,7 @@ app.get("/", (req, res) => {
     apiResponse({
       res,
       status: 500,
-      console: true,
+      isConsole: true,
       code: "SERVER_ERROR",
       success: false,
       message: error.message,

@@ -6,3 +6,11 @@ export const USER_AUTH_TYPES = [
   "TWITTER",
   "APPLE",
 ];
+export const USER_EMAIL_TYPES = [
+  "SIGNUP",
+  "SIGNIN",
+  "RESET_PASSWORD",
+  "PROMOTIONAL",
+  "TRANSACTIONAL",
+  "NOTIFICATION",
+];

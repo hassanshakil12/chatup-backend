@@ -103,8 +103,12 @@ const userSchema = new mongoose.Schema(
     userAuthType: {
       type: String,
       enum: USER_AUTH_TYPES,
-      required: true,
     },
+    uniqueProvideId: {
+      type: String,
+      unique: true,
+      sparse: true
+    }
   },
   { timestamps: true }
 );
