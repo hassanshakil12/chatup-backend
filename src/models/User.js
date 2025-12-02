@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: `${process.env.BASE_URL}/uploads/defaults/default_profile_image.jpg`,
     },
+    caption: {
+      type: String,
+      trim: true,
+    },
     bio: {
       type: String,
       trim: true,

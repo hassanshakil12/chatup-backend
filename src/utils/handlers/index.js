@@ -48,8 +48,8 @@ export const calculateUserProfileCompletion = (user) => {
     { field: "profileImage", weight: 10 },
     { field: "coverImage", weight: 10 },
     { field: "bio", weight: 10 },
-    { field: "website", weight: 20 },
-    // { field: "location", weight: 10 },
+    { field: "website", weight: 10 },
+    { field: "caption", weight: 10 },
   ];
 
   let completion = 0;
@@ -64,4 +64,22 @@ export const calculateUserProfileCompletion = (user) => {
   });
 
   return Math.min(100, completion);
+};
+
+export const sanitizeUserEditableFields = (data, EDITABLE_FIELDS) => {
+  // Handle null/undefined input
+  if (!data || typeof data !== "object") {
+    return {};
+  }
+
+  const sanitizedData = {};
+
+  // Iterate through allowed fields and include only if they exist in data
+  EDITABLE_FIELDS.forEach((field) => {
+    if (data.hasOwnProperty(field)) {
+      sanitizedData[field] = data[field];
+    }
+  });
+
+  return sanitizedData;
 };

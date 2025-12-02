@@ -15,8 +15,20 @@ export const USER_EMAIL_TYPES = [
   "NOTIFICATION",
 ];
 export const USER_SENSITIVE_FIELDS = [
-  '__v',
+  "__v",
   "userDeviceToken",
   "userSocialToken",
   "uniqueProvideId",
+];
+export const USER_EDITABLE_FIELDS = [
+  "username",
+  "email",
+  "displayName",
+  "phoneNumber",
+  "caption",
+  "bio",
+  "location",
+  "website",
+  "birthDate",
+  "gender",
 ];

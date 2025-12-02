@@ -15,6 +15,8 @@ import { virusScanMiddleware } from "../../middlewares/virusScan.js";
 import {
   getUserProfile,
   uploadUserProfileImage,
+  uploadUserCoverImage,
+  editUserProfile,
 } from "../../controllers/profile/index.js";
 
 const router = express.Router();
@@ -33,6 +35,30 @@ router.post(
   validateUpload,
   virusScanMiddleware,
   uploadUserProfileImage
+);
+router.post(
+  "/upload/cover-image",
+  createDynamicLimiter(
+    1,
+    3,
+    "Too many upload requests, please try again later"
+  ),
+  userAuth,
+  setUploadType("coverImage"),
+  uploadConfig.coverImageUpload.single("coverImage"),
+  validateUpload,
+  virusScanMiddleware,
+  uploadUserCoverImage
+);
+router.post(
+  "/edit",
+  createDynamicLimiter(
+    1,
+    5,
+    "Too many profile edit requests, please try again later"
+  ),
+  userAuth,
+  editUserProfile
 );
 
 export default router;
