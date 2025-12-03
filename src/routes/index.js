@@ -4,11 +4,13 @@ import { apiResponse } from "../utils/handlers/index.js";
 
 import authRoutes from "./auth/index.js";
 import profileRoutes from "./profile/index.js";
+import friendRoutes from "./friend/index.js";
 
 const router = express.Router();
 
 router.use("/auth", authRoutes);
 router.use("/profile", profileRoutes);
+router.use("/friend", friendRoutes);
 
 router.get("/", (req, res) => {
   try {
