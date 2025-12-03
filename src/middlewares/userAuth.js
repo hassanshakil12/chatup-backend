@@ -9,7 +9,6 @@ const userAuth = async (req, res, next) => {
       return apiResponse({
         res,
         status: 401,
-        code: ERROR_CODES.TOKEN_MISSING,
         success: false,
         message: "Authorization header is required",
       });

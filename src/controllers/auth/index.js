@@ -7,6 +7,11 @@ import { sendEmailDirect } from "../../services/email.js";
 
 import { apiResponse } from "../../utils/handlers/index.js";
 import { generateAuthToken } from "../../utils/generators/index.js";
+import {
+  USERNAME_VALIDATOR,
+  DISPLAY_NAME_VALIDATOR,
+  EMAIL_VALIDATOR,
+} from "../../utils/validators/index.js";
 import { USER_GENDERS, USER_EMAIL_TYPES } from "../../enums/userEnums.js";
 
 export const loginUser = async (req, res) => {
@@ -115,7 +120,7 @@ export const registerUser = async (req, res) => {
         message: "Username must be between 3 and 30 characters",
       });
     }
-    if (!/^(?![0-9])(?=.*[a-z])[a-z0-9_.]{3,30}$/.test(username)) {
+    if (!USERNAME_VALIDATOR.test(username)) {
       return apiResponse({
         res,
         status: 400,
@@ -142,14 +147,7 @@ export const registerUser = async (req, res) => {
         success: false,
         message: "Display name is required",
       });
-    } else if (displayName.length < 3 || displayName.length > 50) {
-      return apiResponse({
-        res,
-        status: 400,
-        success: false,
-        message: "Display name must be between 3 and 50 characters",
-      });
-    } else if (!/^[a-zA-Z ]{3,50}$/.test(displayName)) {
+    } else if (!DISPLAY_NAME_VALIDATOR.test(displayName)) {
       return apiResponse({
         res,
         status: 400,
@@ -167,7 +165,7 @@ export const registerUser = async (req, res) => {
         success: false,
         message: "Email is required",
       });
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (!EMAIL_VALIDATOR.test(email)) {
       return apiResponse({
         res,
         status: 400,

@@ -3,11 +3,26 @@ import path from "path";
 
 import User from "../../models/User.js";
 
-import { apiResponse, sanitizeUserData } from "../../utils/handlers/index.js";
+import {
+  apiResponse,
+  sanitizeUserData,
+  sanitizeUserEditableFields,
+} from "../../utils/handlers/index.js";
 import {
   USER_SENSITIVE_FIELDS,
   USER_EDITABLE_FIELDS,
+  USER_GENDERS,
 } from "../../enums/userEnums.js";
+import {
+  EMAIL_VALIDATOR,
+  DISPLAY_NAME_VALIDATOR,
+  PHONE_NUMBER_VALIDATOR,
+  USER_BIO_VALIDATOR,
+  USER_CAPTION_VALIDATOR,
+  USER_LINKS_VALIDATOR,
+  validateBirthDate,
+  validateAndSetLocation,
+} from "../../utils/validators/index.js";
 
 export const getUserProfile = async (req, res) => {
   try {
@@ -287,7 +302,152 @@ export const editUserProfile = async (req, res) => {
       });
     }
 
-    
+    const data = sanitizeUserEditableFields(req.body, USER_EDITABLE_FIELDS);
+    if (!data) {
+      return apiResponse({
+        res,
+        status: 400,
+        success: false,
+        message: "Field(s) are not allowed to edit",
+      });
+    }
+
+    if (data.username) {
+      data.username = data.username.toLowerCase();
+
+      const existing = await User.findOne({
+        username: data.username,
+        _id: { $ne: user._id },
+      }).lean();
+      if (existing) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: "Username already exists",
+        });
+      }
+    }
+
+    if (data.displayName) {
+      data.displayName = data.displayName;
+      if (!DISPLAY_NAME_VALIDATOR.test(data.displayName)) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: "Display name must be between 3 to 50 letters",
+        });
+      }
+    }
+
+    if (data.phoneNumber) {
+      data.phoneNumber = data.phoneNumber;
+      if (!PHONE_NUMBER_VALIDATOR.test(data.phoneNumber)) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: "Invalid Phone Number format",
+        });
+      }
+    }
+
+    if (data.bio) {
+      data.bio = data.bio;
+      if (!USER_BIO_VALIDATOR.test(data.bio)) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: "Invalid Bio format",
+        });
+      }
+    }
+
+    if (data.caption) {
+      data.caption = data.caption;
+      if (!USER_CAPTION_VALIDATOR.test(data.caption)) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: "Invalid caption format",
+        });
+      }
+    }
+
+    if (data.website) {
+      data.website = data.website.toLowerCase();
+      if (!USER_LINKS_VALIDATOR.test(data.website)) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: "Invalid website format",
+        });
+      }
+    }
+
+    if (data.birthDate) {
+      data.birthDate = data.birthDate;
+      if (!validateBirthDate(data.birthDate)) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: `Invalid birth date. Valid age is between ${process.env.MIN_AGE} - ${process.env.MAX_AGE}.`,
+        });
+      }
+    }
+
+    if (data.gender) {
+      data.gender = data.gender.toUpperCase();
+      if (!USER_GENDERS.includes(data.gender)) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message: `Invalid gender`,
+        });
+      }
+    }
+
+    if (data.location) {
+      const { valid, message, location } = await validateAndSetLocation(
+        data.location
+      );
+      if (!valid) {
+        return apiResponse({
+          res,
+          status: 400,
+          success: false,
+          message,
+        });
+      }
+
+      data.location = location;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(user._id, data, {
+      new: true,
+    });
+    if (!updatedUser) {
+      return apiResponse({
+        res,
+        status: 400,
+        success: false,
+        message: "Failed to update user data",
+      });
+    }
+
+    return apiResponse({
+      res,
+      status: 200,
+      success: true,
+      message: "User data updated successfully",
+      data: updatedUser,
+    });
   } catch (error) {
     return apiResponse({
       res,

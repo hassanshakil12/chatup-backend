@@ -37,10 +37,12 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
+      trim: true,
       default: `${process.env.BASE_URL}/uploads/defaults/default_profile_image.jpg`,
     },
     coverImage: {
       type: String,
+      trim: true,
       default: `${process.env.BASE_URL}/uploads/defaults/default_profile_image.jpg`,
     },
     caption: {
@@ -78,6 +80,7 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String,
       enum: USER_GENDERS,
+      trim: true,
       index: true,
     },
     isVerified: {

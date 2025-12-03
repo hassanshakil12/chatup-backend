@@ -22,7 +22,6 @@ export const USER_SENSITIVE_FIELDS = [
 ];
 export const USER_EDITABLE_FIELDS = [
   "username",
-  "email",
   "displayName",
   "phoneNumber",
   "caption",
