@@ -1,0 +1,9 @@
+export const MESSAGE_CATEGORIES = [
+  "TEXT",
+  "VOICE",
+  "MEDIA",
+  "LOCATION",
+  "POLL",
+];
+export const MESSAGE_MEDIA_CATEGORIES = ["IMAGE", "VIDEO", "DOCUMENT", "AUDIO"];
+export const LOCATION_CATEGORIES = ["CURRENT", "LIVE", "OTHER"];

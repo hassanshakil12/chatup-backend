@@ -1,0 +1,30 @@
+export const CHAT_CATEGORIES = ["INDIVIDUAL", "GROUP"];
+export const MESSAGING_ALLOWED_TO = ["ALL", "ADMIN", "PREMIUM", "CREATOR"];
+export const TOGGLING_MEMBERS_ALLOWED_TO = [
+  "ALL",
+  "ADMIN",
+  "PREMIUM",
+  "CREATOR",
+];
+export const DELETING_MESSAGE_ALLOWED_TO = [
+  "ALL",
+  "ADMIN",
+  "PREMIUM",
+  "CREATOR",
+];
+export const CHANGING_SETTING_ALLOWED_TO = [
+  "ALL",
+  "ADMIN",
+  "PREMIUM",
+  "CREATOR",
+];
+export const SHARING_CHAT_ALLOWED_TO = ["ALL", "ADMIN", "PREMIUM", "CREATOR"];
+export const DELETING_CHAT_ALLOWED_TO = ["ALL", "ADMIN", "PREMIUM", "CREATOR"];
+export const NAMING_MEMBER_ALLOWED_TO = ["ALL", "ADMIN", "PREMIUM", "CREATOR"];
+export const ADDING_DESCRIPTION_ALLOWED_TO = [
+  "ALL",
+  "ADMIN",
+  "PREMIUM",
+  "CREATOR",
+];
+export const NAMING_CHAT_ALLOWED_TO = ["ALL", "ADMIN", "PREMIUM", "CREATOR"];
