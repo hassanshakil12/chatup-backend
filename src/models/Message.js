@@ -48,6 +48,32 @@ const locationSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const pollSchema = new mongoose.Schema(
+  {
+    text: {
+      type: String,
+      trim: true,
+    },
+    options: [
+      {
+        text: {
+          type: String,
+          trim: true,
+        },
+        selectors: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            index: true,
+            required: true,
+          },
+        ],
+      },
+    ],
+  },
+  { _id: false }
+);
+
 const messageSchema = new mongoose.Schema(
   {
     chatId: {
@@ -79,6 +105,7 @@ const messageSchema = new mongoose.Schema(
       trim: true,
     },
     location: locationSchema,
+    poll: pollSchema,
   },
   { timestamps: true }
 );

@@ -6,7 +6,6 @@ const friendSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     nickName: {
       type: String,
@@ -30,8 +29,12 @@ const friendSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    addedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  { _id: false, timestamps: true }
+  { _id: false }
 );
 
 const friendListSchema = new mongoose.Schema(
@@ -40,7 +43,6 @@ const friendListSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     friends: {
       type: [friendSchema],
@@ -57,5 +59,32 @@ const friendListSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+friendListSchema.index({ userId: 1, "friends.friendId": 1 });
+
+friendListSchema.methods.addFriend = function (friendId, options = {}) {
+  const existingFriendIndex = this.friends.findIndex(
+    (f) => f.id.toString() === friendId.toString()
+  );
+
+  if (existingFriendIndex === -1) {
+    this.friends.push({
+      id: friendId, // Changed from friendId to id
+      nickName: options.nickName,
+      addedAt: new Date(),
+      chatColor: options.chatColor,
+    });
+    return true;
+  }
+  return false;
+};
+
+friendListSchema.methods.removeFriend = function (friendId) {
+  const initialLength = this.friends.length;
+  this.friends = this.friends.filter(
+    (f) => f.id.toString() !== friendId.toString()
+  );
+  return this.friends.length < initialLength;
+};
 
 export default mongoose.model("FriendList", friendListSchema);

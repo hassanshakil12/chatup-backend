@@ -1,0 +1,6 @@
+export const FRIEND_REQUEST_STATUS = [
+  "PENDING",
+  "ACCEPTED",
+  "REJECTED",
+  "CANCELLED",
+];

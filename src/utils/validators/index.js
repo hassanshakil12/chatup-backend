@@ -1,5 +1,7 @@
 import geocoder from "../../config/geocoder.js";
 
+import FriendList from "../../models/FriendList.js";
+
 export const USERNAME_VALIDATOR = /^(?![0-9])(?=.*[a-z])[a-z0-9_.]{3,30}$/;
 export const DISPLAY_NAME_VALIDATOR = /^[a-zA-Z ]{3,50}$/;
 export const EMAIL_VALIDATOR =
@@ -68,4 +70,70 @@ export const validateAndSetLocation = async (location) => {
   }
 
   return { valid: true, location };
+};
+
+export const validateIfFriends = async (userId1, userId2) => {
+  try {
+    const result = await FriendList.aggregate([
+      {
+        $match: {
+          $or: [
+            {
+              userId: new mongoose.Types.ObjectId(userId1),
+              "friends.friendId": new mongoose.Types.ObjectId(userId2),
+            },
+            {
+              userId: new mongoose.Types.ObjectId(userId2),
+              "friends.friendId": new mongoose.Types.ObjectId(userId1),
+            },
+          ],
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    return result.length > 0 && result[0].count === 2;
+  } catch (error) {
+    console.error("Error checking friendship:", error);
+    return false;
+  }
+};
+
+// Get mutual friends
+export const getMutualFriends = async (userId1, userId2) => {
+  try {
+    const [user1List, user2List] = await Promise.all([
+      FriendList.findOne({ userId: userId1 }).populate(
+        "friends.friendId",
+        "username displayName profileImage"
+      ),
+      FriendList.findOne({ userId: userId2 }).populate(
+        "friends.friendId",
+        "username displayName profileImage"
+      ),
+    ]);
+
+    if (!user1List || !user2List) return [];
+
+    const user1FriendIds = user1List.friends.map((f) =>
+      f.friendId._id.toString()
+    );
+    const user2FriendIds = user2List.friends.map((f) =>
+      f.friendId._id.toString()
+    );
+
+    const mutualIds = user1FriendIds.filter((id) =>
+      user2FriendIds.includes(id)
+    );
+
+    return mutualIds;
+  } catch (error) {
+    console.error("Error getting mutual friends:", error);
+    return [];
+  }
 };
