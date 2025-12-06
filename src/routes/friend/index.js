@@ -10,6 +10,7 @@ import {
   sendFriendRequest,
   updateFriendRequest,
   updateFriendSettings,
+  removeFriend,
 } from "../../controllers/friend/index.js";
 
 const router = express.Router();
@@ -49,6 +50,12 @@ router.post(
   createDynamicLimiter(1, 20, "Too many requests, please try again later"),
   userAuth,
   updateFriendSettings
+);
+router.post(
+  "/remove/:id",
+  createDynamicLimiter(1, 20, "Too many requests, please try again later"),
+  userAuth,
+  removeFriend
 );
 
 export default router;
